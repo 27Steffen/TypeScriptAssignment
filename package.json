@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "rollup": "^2.1.0",
+    "rollup": "^2.1.0"
+  },
+  "devDependencies": {
     "rollup-plugin-typescript2": "^0.26.0",
     "typescript": "^3.8.3"
   }
