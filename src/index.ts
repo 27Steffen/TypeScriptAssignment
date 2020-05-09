@@ -1,46 +1,33 @@
 const keyEingabe : number = 13;
 
 document.addEventListener("DOMContentLoaded", (): void => {
-
     const neuesTodoElement = document.querySelector<HTMLInputElement>(".newAufgabe");
 	const aufgaListElement = document.querySelector<HTMLElement>(".taskList");
 	const footerElement = document.querySelector<HTMLElement>(".footer");
-	const zählElement = document.querySelector<HTMLElement>(".todo-count strong");
 	const alleswegElement = document.querySelector<HTMLElement>(".clearKomplett");
 
-	const refresh = (): void  => {
+	function refresh() : void {
 		if (aufgaListElement!.children.length === 0) {
 			footerElement!.style.display = "none";
 		} 
 		else {
 			footerElement!.style.display = "";
 		}
-		
-		
-		/*let todoCounter = aufgaListElement!.querySelectorAll("li:not(.completed)").length;
-        zählElement!.innerText = "todoCounter";	*/
-       
-        /*let todoCounter: number = 0
-		for (const todoListItem of aufgaListElement!.children) {
-			if (!todoListItem.classList.contains("completed")) {
-				todoCounter++
-			}
-		}
-*/
+
 		let kompletterZähler: number = aufgaListElement!.querySelectorAll("li.completed").length;
 
 		if (kompletterZähler === 0) {
 			alleswegElement!.style.display = "none";
 		} 
-		else {
+		else (kompletterZähler !== 0); {
 			alleswegElement!.style.display = "";
 		}
 	}
 	refresh();
-											                        //First, to make typescript tolerate parameters without declaring their type
-    const addCallbacksForLi = (liElement) : void => { 	                // in tsconfig.json habe ich etas auf false gesetzt
+											                        
+    const nehmeLizurück = (liElement) : void => { 	                
 		const checkboxElement = liElement.querySelector(".toggle");
-		const verstreichenButtonElement = liElement.querySelector(".destroy");
+		const verstreichenButtonElement = liElement.querySelector(".zerstör");
 
 		checkboxElement.addEventListener("change", () : void => {
 
@@ -50,7 +37,6 @@ document.addEventListener("DOMContentLoaded", (): void => {
 			else {
 				liElement.classList.remove("completed");
 			}
-
 			refresh();
 		})
 
@@ -60,46 +46,40 @@ document.addEventListener("DOMContentLoaded", (): void => {
 			refresh();
 		})
 	}
-
-
 	neuesTodoElement!.addEventListener("keypress", (event :KeyboardEvent): void => {
 
 		if (event.which === keyEingabe && neuesTodoElement!.value !== "") {
 
-			const neuerButtonElement: HTMLButtonElement = document.createElement("button");
-			neuerButtonElement.classList.add("destroy");
+		const neuerButtonElement = document.createElement("button") as HTMLButtonElement;
+		neuerButtonElement.classList.add("zerstör");
 			
-			const neuesLabelElement: HTMLLabelElement = document.createElement("label");
-			neuesLabelElement.appendChild(
+			const neuesLabelElement = document.createElement("label") as HTMLLabelElement;
+			neuesLabelElement.appendChild(document.createTextNode(neuesTodoElement!.value));
 
-			document.createTextNode(neuesTodoElement!.value) 
-			);
+		const neueInputCheckbox = document.createElement("input") as HTMLInputElement;
+		neueInputCheckbox.type = "checkbox";
+		neueInputCheckbox.classList.add("toggle");
 
-			const neueInputCheckbox: HTMLInputElement = document.createElement("input");
-			neueInputCheckbox.type = "checkbox";
-			neueInputCheckbox.classList.add("toggle");
-
-			const neuesDivElement:  HTMLDivElement = document.createElement("div");
+			const neuesDivElement = document.createElement("div") as HTMLDivElement;
 			neuesDivElement.classList.add("view");
 
 			neuesDivElement.appendChild(neueInputCheckbox);
 			neuesDivElement.appendChild(neuesLabelElement);
 			neuesDivElement.appendChild(neuerButtonElement);
 
-			const neuesLiElement:HTMLLIElement = document.createElement("li");
-			neuesLiElement.appendChild(neuesDivElement);
+		const neuesLiElement = document.createElement("li") as HTMLLIElement;
+		neuesLiElement.appendChild(neuesDivElement);
 
-			addCallbacksForLi(neuesLiElement);
+		nehmeLizurück(neuesLiElement);
 
-			aufgaListElement!.prepend(neuesLiElement);
+		aufgaListElement!.prepend(neuesLiElement);
 
-			neuesTodoElement!.value = "";
+		neuesTodoElement!.value = "";
 
-			refresh();
+		refresh();
 		}
-
 	});
-
+	
 	alleswegElement!.addEventListener("click", (event: MouseEvent) => {
 
 		const completeLiElements: NodeListOf<Element> = aufgaListElement!.querySelectorAll("li.completed");
@@ -107,7 +87,6 @@ document.addEventListener("DOMContentLoaded", (): void => {
 
 			komplettesLiElement.remove();
 		}
-
 		refresh();
 	})
 }); 
